@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -39,10 +40,14 @@ public class TodoService {
     return Optional.of(savedTodo);
   }
 
-  public void save(String email, Todo todo) {
-    User user = userRepository.findByEmail(email);
-    todo.setUser(user);
-    todoRepository.save(todo);
+  public void save(String email, Todo todo) throws Exception {
+    try {
+      User user = userRepository.findByEmail(email);
+      todo.setUser(user);
+      todoRepository.save(todo);
+    } catch(UsernameNotFoundException e ) {
+      throw new UsernameNotFoundException(e.getMessage());
+    }
   }
 
   public void remove(long id) {

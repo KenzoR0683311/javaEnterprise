@@ -1,13 +1,17 @@
 package example.com.jms;
 
-/*``
+/*
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import example.com.entities.Todo;
+
+import javax.jms.JMSException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
+
 
 
 public class JmsReceiver {
@@ -18,7 +22,7 @@ public class JmsReceiver {
     
     public JmsReceiver() {
         try {
-            //contextObj = JAXBContext.newInstance(ChatRequest.class);
+            contextObj = JAXBContext.newInstance(Todo.class);
             unmarshaller = contextObj.createUnmarshaller();
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -32,7 +36,7 @@ public class JmsReceiver {
         try {
             if (message.startsWith("<?xml version")){
                 StringReader reader = new StringReader(message);
-                //ChatRequest cr = (ChatRequest) unmarshaller.unmarshal(reader);
+                Todo todo = (Todo) unmarshaller.unmarshal(reader);
 
                 //msgLogger.info("JMS | " + cr.getSender() + " | " + cr.getMessage());
 
@@ -43,5 +47,5 @@ public class JmsReceiver {
         }
     }
 }
-*/
 
+*/

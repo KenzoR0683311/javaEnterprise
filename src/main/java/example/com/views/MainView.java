@@ -3,6 +3,7 @@ package example.com.views;
 import example.com.service.TodoService;
 import jakarta.annotation.security.PermitAll;
 import example.com.entities.Todo;
+import example.com.enums.TodoStatus;
 
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
@@ -10,6 +11,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Route("/")
@@ -20,7 +23,11 @@ public class MainView extends VerticalLayout {
   @Autowired
   public MainView(TodoService todoService) {
     this.todoService = todoService;
-    List<Todo> todos = todoService.findAll();
+    List<Todo> todos = todoService
+                        .findAll()
+                        .stream()
+                        .filter(todo -> todo.getCurrentStatus() == TodoStatus.TODO || todo.getCurrentStatus() == TodoStatus.DOING)
+                        .collect(Collectors.toList());
 
     Grid<Todo> grid = new Grid<>(Todo.class);
     grid.setItems(todos);

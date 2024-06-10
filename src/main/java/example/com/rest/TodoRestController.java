@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +31,7 @@ class TodoRestController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Todo> get(long id) {
+  public ResponseEntity<Todo> get(@PathVariable("id") long id) {
     Optional<Todo> optionalTodo = todoService.findById(id);
     
     Todo todo = optionalTodo.get();
@@ -42,13 +43,14 @@ class TodoRestController {
     todoService.save(todo);
   }
 
-  @PutMapping("/{id}")
-  public void add(String email, @RequestBody Todo todo) {
-    todoService.save(email, todo);
+  @PutMapping()
+  public void update(@RequestBody Todo todo) {
+    todoService.save(todo);
   }
 
+
   @DeleteMapping("/{id}")
-  public void delete(long id) {
+  public void delete(@PathVariable("id") long id) {
     todoService.remove(id);
   }
 }

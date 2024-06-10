@@ -16,9 +16,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.security.web.savedrequest.NullRequestCache;
 import org.springframework.core.annotation.Order;
-
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
 import example.com.service.UserService;
 
@@ -29,7 +32,7 @@ public class SecurityConfig extends VaadinWebSecurity {
   private UserService userService;
   @Autowired
   private JwtTokenFilter jwtTokenFilter;
-    
+  
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
@@ -39,17 +42,24 @@ public class SecurityConfig extends VaadinWebSecurity {
   public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
     return authConfig.getAuthenticationManager();
   }
-  
-  
 
+  @Bean
+  public HttpFirewall allowSemicolonHttpFirewall() {
+    StrictHttpFirewall firewall = new StrictHttpFirewall();
+    firewall.setAllowSemicolon(true);
+    return firewall;
+  }
+  
   @Bean
   @Order(1)
   SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
     http.csrf().disable()
       .securityMatcher("/api/**")
       .authorizeHttpRequests(auth -> {
-        auth.requestMatchers("/auth").permitAll();
+        auth.requestMatchers(HttpMethod.POST, "/api/auth").permitAll();
         auth.anyRequest().authenticated();
+        //auth.requestMatchers("/auth").permitAll();
+        //auth.anyRequest().permitAll();
       }).sessionManagement()
       .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
       //.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -63,10 +73,12 @@ public class SecurityConfig extends VaadinWebSecurity {
   @Order(2)
   SecurityFilterChain soapSecurityFilterChain(HttpSecurity http) throws Exception {
     http
-      .csrf().disable()
-      .securityMatcher("/soap/**")
-      .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
-
+       .csrf().disable()
+       .securityMatcher("/soap/**")
+       .authorizeHttpRequests(auth -> {
+          auth.anyRequest().permitAll();
+       });
+    
     return http.build();
   }
 
@@ -74,6 +86,6 @@ public class SecurityConfig extends VaadinWebSecurity {
   protected void configure(HttpSecurity http) throws Exception {
     super.configure(http);
     setLoginView(http, LoginView.class);
-  }
+  }  
 }
 

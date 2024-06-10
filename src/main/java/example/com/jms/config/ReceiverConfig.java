@@ -1,13 +1,12 @@
 package example.com.jms.config;
-
 /*
-//import org.apache.activemq.ActiveMQConnectionFactory;
-//import org.apache.activemq.RedeliveryPolicy;
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.RedeliveryPolicy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-//import org.springframework.jms.annotation.EnableJms;
-//import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+import org.springframework.jms.annotation.EnableJms;
+import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 
 import java.util.concurrent.TimeUnit;
 

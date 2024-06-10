@@ -1,10 +1,13 @@
 package example.com.jms;
+
 /*
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
+
+import example.com.entities.Todo;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -16,16 +19,16 @@ public class JmsSender {
 
     @Value("${jms.queue-name}")
     private String queueName;
+
     @Autowired
     private JmsTemplate jmsTemplate;
-    public void sendOnQueue(ChatMessageDTO msg) {
+
+    public void sendOnQueue(Todo todo) {
         try {
-            JAXBContext contextObj = JAXBContext.newInstance(ChatRequest.class);
+            JAXBContext contextObj = JAXBContext.newInstance(Todo.class);
             Marshaller marshaller = contextObj.createMarshaller();
 
-            ChatRequest req = new ChatRequest();
-            req.setSender(msg.getSender());
-            req.setMessage(msg.getMessage());
+            Todo req = new Todo();
 
             StringWriter sw = new StringWriter();
             marshaller.marshal(req, sw);

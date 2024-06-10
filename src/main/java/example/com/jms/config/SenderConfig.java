@@ -1,5 +1,4 @@
 package example.com.jms.config;
-
 /*
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;

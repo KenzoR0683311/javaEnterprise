@@ -66,3 +66,5 @@ buildNumber.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,java,maven,vaadin
 
+test.wsdl
+todoList.csv

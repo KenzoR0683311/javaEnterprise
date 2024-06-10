@@ -34,37 +34,26 @@ public class TodoEndpoint {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         AddTodoResponse response = new AddTodoResponse();
 
-        String email = request.getEmail();
-
-        
         try {
             Todo todo = new Todo(request.getTitle(), request.getComment(), formatter.parse(request.getExpirydate()));
-
-            // 2. Log the incoming event and the data
-            // logger.debug("Received message '" + cm.getMessage() + "' from " + cm.getSender());
-            // msgLogger.info("SOAP | " + cm.getSender() + " | " + cm.getMessage());
-
-            // 3. Process the message (call Business Logic layer and pass the DTO on)
-            Optional<Todo> t = todoService.save(todo);
+            String email = request.getEmail();
             
-            // 4a. Prepare the JAXB generated Response. All processing went OK
+            logger.debug("Received  Todo: " + todo.getTitle() + " " + todo.getComment() + " " + todo.getExpiryDate());
+            todoService.save(todo);
+
             response.setCode(0);
             response.setType(STypeProcessOutcome.INFO);
         } catch (IllegalArgumentException e) {
-            // 4b. Prepare the JAXB generated Response. Something went wrong. Inform the caller of the error
             response.setCode(1);
             response.setType(STypeProcessOutcome.ERROR);
             response.setFeedback(e.getMessage());
         } catch (Exception e) {
             logger.error("An unexpected exception occured", e);
-
-            // 4c. Prepare the JAXB generated Response. Something went wrong. Inform the caller of the error
             response.setCode(1);
             response.setType(STypeProcessOutcome.ERROR);
             response.setFeedback("An unexpected exception occured");
         }
 
-        // 5. Effectively return the SOAP Web-Service response
         return response;
     }
 }
